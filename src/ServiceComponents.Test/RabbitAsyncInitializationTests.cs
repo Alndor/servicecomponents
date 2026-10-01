@@ -159,7 +159,9 @@ public class RabbitAsyncInitializationTests
             ["ServiceComponents:RabbitConnectionOptions:RequestedHeartbeat"] = "not-a-number"
         }).Build();
         var builder = new ContainerBuilder();
-        builder.RegisterRabbitConnection(new Uri("amqp://localhost"), "configuration-test");
+        var connection = new Mock<IConnection>();
+
+        builder.RegisterRabbitConnection(_ => Factory(connection).Object);
         builder.RegisterInstance(configuration).As<IConfiguration>();
         await using var container = builder.Build();
 
